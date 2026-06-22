@@ -1,5 +1,4 @@
 import {throttle, debounce} from '../index'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {throttle as decoratorThrottle, debounce as decoratorDebounce} from '../decorators'
 import {beforeEach, describe, it, expect} from 'vitest'
 const delay = (m: number) => new Promise(r => setTimeout(r, m))
@@ -13,7 +12,7 @@ let calls: unknown[] = []
 let fn: Throttler<unknown[]>
 
 beforeEach(() => {
-  fn && fn.cancel && fn.cancel()
+  fn?.cancel?.()
   calls = []
 })
 describe('throttle', () => {

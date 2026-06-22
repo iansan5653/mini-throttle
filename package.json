@@ -24,52 +24,39 @@
     "build-esm": "tsc",
     "build-umd": "tsc -m umd --outDir dist/umd",
     "clean": "rm -rf dist",
-    "lint": "eslint --report-unused-disable-directives . --color --ext .js,.ts,.tsx && tsc --noEmit",
+    "lint": "eslint . --report-unused-disable-directives --color && tsc --noEmit",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
     "postpublish": "npm publish --ignore-scripts --@github:registry='https://npm.pkg.github.com'"
   },
-  "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
-    "extends": [
-      "plugin:github/recommended",
-      "plugin:github/browser",
-      "plugin:escompat/recommended",
-      "plugin:@typescript-eslint/recommended",
-      "prettier"
-    ],
-    "rules": {
-      "no-invalid-this": "off"
-    },
-    "overrides": [
-      {
-        "files": "test/*",
-        "rules": {
-          "no-console": "off",
-          "@typescript-eslint/no-empty-function": "off"
-        }
-      }
-    ]
-  },
   "prettier": "@github/prettier-config",
-  "eslintIgnore": [
-    "dist/"
-  ],
   "devDependencies": {
     "@github/prettier-config": "0.0.4",
     "@types/debug": "^4.1.12",
     "@types/node": "^24.7.0",
-    "@typescript-eslint/eslint-plugin": "^4.15.2",
-    "@typescript-eslint/parser": "^4.15.2",
     "@vitest/browser": "^4.1.8",
     "@vitest/browser-playwright": "^4.1.8",
-    "eslint": "^7.20.0",
-    "eslint-plugin-compat": "^6.2.1",
+    "eslint": "^10.5.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-compat": "^7.0.2",
     "eslint-plugin-escompat": "^3.11.4",
-    "eslint-plugin-github": "^4.1.1",
+    "eslint-plugin-github": "^6.0.0",
     "playwright": "^1.60.0",
     "prettier": "^2.2.1",
     "typescript": "^5.9.3",
     "vitest": "^4.1.8"
+  },
+  "overrides": {
+    "eslint-plugin-github": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-import": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-eslint-comments": "npm:@eslint-community/eslint-plugin-eslint-comments@^4.7.2",
+    "@eslint/compat": "^2.1.0"
   }
 }
