@@ -38,6 +38,8 @@ describe('throttle', () => {
     vi.advanceTimersByTime(50)
     fn(4)
     vi.advanceTimersByTime(100) // wait for end
+
+    // start: 1; middle: 3; end: 4
     expect(calls).toEqual([[1], [3], [4]])
   })
 
@@ -121,6 +123,38 @@ describe('throttle {middle:false}', () => {
     vi.advanceTimersByTime(50)
     fn(4)
     expect(calls).toEqual([[1]])
+  })
+})
+
+describe('throttle {end:false}', () => {
+  beforeEach(() => {
+    fn = throttle((...xs) => calls.push(xs), 100, {end: false})
+  })
+
+  it('fires first callback', () => {
+    fn(1)
+    expect(calls).toEqual([[1]])
+  })
+
+  it('does not fire fast second callback even after `wait` ms passes', () => {
+    fn(1)
+    vi.advanceTimersByTime(50)
+    fn(2)
+    vi.advanceTimersByTime(100)
+    expect(calls).toEqual([[1]])
+  })
+
+  it('still fires middle callback during sequence', () => {
+    fn(1)
+    vi.advanceTimersByTime(50)
+    fn(2)
+    vi.advanceTimersByTime(50)
+    fn(3)
+    vi.advanceTimersByTime(50)
+    fn(4)
+
+    // start: 1; middle: 3; no end
+    expect(calls).toEqual([[1], [3]])
   })
 })
 
