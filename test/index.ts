@@ -37,7 +37,8 @@ describe('throttle', () => {
     fn(3)
     vi.advanceTimersByTime(50)
     fn(4)
-    expect(calls).toEqual([[1], [2]])
+    vi.advanceTimersByTime(100) // wait for end
+    expect(calls).toEqual([[1], [3], [4]])
   })
 
   it('will fire last call after `wait` ms have passed', () => {
@@ -179,7 +180,7 @@ describe('marbles', () => {
 
   it('throttle(fn, 100)', () => {
     loop(throttle(x => calls.push(x), 100))
-    expect(calls).toEqual([1, 2, 4, 6, 8, 10])
+    expect(calls).toEqual([1, 3, 5, 7, 9, 10])
   })
 
   it('throttle(fn, 100, {start:false})', () => {
@@ -217,7 +218,7 @@ describe('decorators', () => {
       }
       const instance = new MyClass()
       loop(x => instance.foo(x))
-      expect(calls).toEqual([1, 2, 4, 6, 8, 10])
+      expect(calls).toEqual([1, 3, 5, 7, 9, 10])
     })
   })
 
