@@ -40,7 +40,7 @@ export function throttle<T extends unknown[]>(
       clearTimeout(endTimer)
       lastCall = Date.now()
       callback.apply(this, args)
-      if (once) this.cancel()
+      if (once) fn.cancel()
     }
 
     const isStartOfSequence = Date.now() - lastAttempt >= wait
