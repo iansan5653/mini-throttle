@@ -212,19 +212,19 @@ describe('marbles', () => {
     expect(calls).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   })
 
-  it('throttle(fn, 100)', () => {
-    loop(throttle(x => calls.push(x), 100))
-    expect(calls).toEqual([1, 3, 5, 7, 9, 10])
-  })
-
-  it('throttle(fn, 100, {start:false})', () => {
-    loop(throttle(x => calls.push(x), 100, {start: false}))
-    expect(calls).toEqual([2, 4, 6, 8, 10])
-  })
-
-  it('throttle(fn, 100, {middle:false})', () => {
-    loop(throttle(x => calls.push(x), 100, {middle: false}))
-    expect(calls).toEqual([1, 10])
+  it.each([
+    [{start: true, middle: true, end: true}, [1, 3, 5, 7, 9, 10]],
+    [{start: true, middle: true, end: false}, [1, 3, 5, 7, 9]],
+    [{start: true, middle: false, end: true}, [1, 10]],
+    [{start: true, middle: false, end: false}, [1]],
+    [{start: false, middle: true, end: true}, [3, 5, 7, 9, 10]],
+    [{start: false, middle: true, end: false}, [3, 5, 7, 9]],
+    [{start: false, middle: false, end: true}, [10]],
+    [{start: false, middle: false, end: false}, []],
+    [{}, [1, 3, 5, 7, 9, 10]]
+  ])('throttle(fn, 100, %s)', (opts, expected) => {
+    loop(throttle(x => calls.push(x), 100, opts))
+    expect(calls).toEqual(expected)
   })
 
   it('debounce(fn, 100)', () => {
