@@ -44,6 +44,11 @@ export function throttle<T extends unknown[]>(
       if (once) fn.cancel()
     }
 
+    const queueCall = (delay: number) => {
+      clearTimeout(endTimer)
+      endTimer = setTimeout(() => makeCall(), delay)
+    }
+
     const isStartOfSequence = Date.now() - lastAttempt >= wait
     lastAttempt = Date.now()
 
@@ -63,8 +68,7 @@ export function throttle<T extends unknown[]>(
 
     // end: Schedule a call for after the sequence ends, if it hasn't already been handled
     if (end) {
-      clearTimeout(endTimer)
-      endTimer = setTimeout(() => makeCall(), wait)
+      queueCall(wait)
     }
   }
 
