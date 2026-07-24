@@ -47,7 +47,7 @@ describe('throttle', () => {
     fn(1)
     fn(2)
     fn(3)
-    vi.advanceTimersByTime(100)
+    vi.advanceTimersByTime(150)
     expect(calls).toEqual([[1], [3]])
   })
 
@@ -67,7 +67,7 @@ describe('throttle', () => {
     fn(4, 5, 6)
     fn(7, 8, 9)
     fn(10, 11, 12)
-    vi.advanceTimersByTime(100)
+    vi.advanceTimersByTime(150)
     expect(calls).toEqual([
       [1, 2, 3],
       [10, 11, 12]
@@ -153,7 +153,7 @@ describe('throttle {end:false}', () => {
     vi.advanceTimersByTime(50)
     fn(4)
 
-    // start: 1; middle: 3; no end
+    // start: 1; middle: 2; no end
     expect(calls).toEqual([[1], [3]])
   })
 })
@@ -202,6 +202,8 @@ describe('marbles', () => {
   const loop = (cb: (n: number) => void) => {
     for (let i = 1; i <= 10; ++i) {
       cb(i)
+      // Things are clearer when the interval is not an exact divisor of the throttle time (at which point middle calls
+      // start conflicting and being less obvious/predictable)
       vi.advanceTimersByTime(50)
     }
     vi.advanceTimersByTime(100)
@@ -212,6 +214,8 @@ describe('marbles', () => {
     expect(calls).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   })
 
+  // Note: middle calls are even numbers instead of odd numbers, because the second call gets queued for exactly the
+  // time the third call gets made. The second call just barely beats the third call.
   it.each([
     [{start: true, middle: true, end: true}, [1, 3, 5, 7, 9, 10]],
     [{start: true, middle: true, end: false}, [1, 3, 5, 7, 9]],

@@ -60,15 +60,32 @@ export function throttle<T extends unknown[]>(
       return
     }
 
-    // middle: If it has been sufficient time since the last successful call, make another call
-    if (middle && Date.now() - lastCall >= wait) {
-      makeCall()
+    // If middle and end are both enabled, we can queue them the same way. This ensures even spacing; calls are made
+    // exactly every `wait` ms during the sequence. Mimics Lodash style throttle.
+    if (middle && end) {
+      const remainingWait = wait - (Date.now() - lastCall)
+      if (remainingWait <= 0) {
+        makeCall()
+      } else {
+        // +1 ms ensures that if a call is attempted at exactly the same time as the queued call would be made,
+        // the requested call will win over the queued call.
+        queueCall(remainingWait + 1)
+      }
       return
     }
 
-    // end: Schedule a call for after the sequence ends, if it hasn't already been handled
-    if (end) {
+    // If middle is disabled (something Lodash doesn't support), we have to wait the full interval for the end call.
+    // This is because we don't know if another call will be made unless we wait until the sequence is definitely over.
+    if (!middle && end) {
       queueCall(wait)
+      return
+    }
+
+    // If middle is enabled but end is disabled, we cannot make the middle call until another call is made - if we
+    // optimistically make a call as soon as `wait` is over, it will look like an `end` call which would violate the end setting.
+    if (middle && !end) {
+      if (Date.now() - lastCall >= wait) makeCall()
+      return
     }
   }
 
