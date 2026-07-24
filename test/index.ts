@@ -214,8 +214,6 @@ describe('marbles', () => {
     expect(calls).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
   })
 
-  // Note: middle calls are even numbers instead of odd numbers, because the second call gets queued for exactly the
-  // time the third call gets made. The second call just barely beats the third call.
   it.each([
     [{start: true, middle: true, end: true}, [1, 3, 5, 7, 9, 10]],
     [{start: true, middle: true, end: false}, [1, 3, 5, 7, 9]],
