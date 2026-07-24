@@ -34,7 +34,7 @@ export function throttle<T extends unknown[]>(
   let endTimer: ReturnType<typeof setTimeout>
   let cancelled = false
 
-  function fn(this: Throttler<T>, ...args: T) {
+  function fn(this: unknown, ...args: T) {
     if (cancelled) return
 
     const makeCall = () => {
